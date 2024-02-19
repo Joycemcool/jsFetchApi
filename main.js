@@ -66,12 +66,99 @@
                     img.src = card.image;
                     document.getElementById('body').appendChild(img); 
                 })
-                
-                
+                var high_card = determineHighestHand(data.cards);
+                var high_card_display = document.createElement('h4');
+                high_card_display.innerHTML = high_card;
+                document.getElementById('body').appendChild(high_card_display); 
             });
-
-
         })
+
+    //below credit to Chatgpt
+    function determinRank(value){
+        const faceCards = { JACK: 11, QUEEN: 12, KING: 13, ACE: 14 };
+        return faceCards[value] || parseInt(value);
+    }
+
+    function determineHighestHand(cards) {
+        // Sort cards by rank
+        cards.sort((a, b) => determinRank(a.value) -  determinRank(b.value));
+    
+        // Check for specific hand combinations
+        if (isStraightFlush(cards)) {
+            return "Straight Flush";
+        }
+        if (isFourOfAKind(cards)) {
+            return "Four of a Kind";
+        }
+        if (isFullHouse(cards)) {
+            return "Full House";
+        }
+        if (isFlush(cards)) {
+            return "Flush";
+        }
+        if (isStraight(cards)) {
+            return "Straight";
+        }
+        if (isThreeOfAKind(cards)) {
+            return "Three of a Kind";
+        }
+        if (isTwoPair(cards)) {
+            return "Two Pair";
+        }
+        if (isOnePair(cards)) {
+            return "One Pair";
+        }
+        
+        // If no specific hand is found, default to High Card
+        return "High Card";
+    }
+    
+    // Helper functions to determine specific hand combinations
+    function isStraightFlush(cards) {
+        return isStraight(cards) && isFlush(cards);
+    }
+    
+    function isFourOfAKind(cards) {
+        return cards[0].value === cards[1].value && cards[1].value === cards[2].value && cards[2].value === cards[3].value ||
+               cards[1].value === cards[2].value && cards[2].value === cards[3].value && cards[3].value === cards[4].value;
+    }
+    
+    function isFullHouse(cards) {
+        return (cards[0].value === cards[1].value && cards[2].value === cards[3].value && cards[3].value === cards[4].value) ||
+               (cards[0].value === cards[1].value && cards[1].value === cards[2].value && cards[3].value === cards[4].value);
+    }
+    
+    function isFlush(cards) {
+        return cards.every(card => card.suit === cards[0].suit);
+    }
+    
+    function isStraight(cards) {
+        for (let i = 1; i < cards.length; i++) {
+            if (determinRank(cards[i].value) !== determinRank(cards[i - 1].value + 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    function isThreeOfAKind(cards) {
+        return cards[0].value === cards[1].value && cards[1].value === cards[2].value ||
+               cards[1].value === cards[2].value && cards[2].value === cards[3].value ||
+               cards[2].value === cards[3].value && cards[3].value === cards[4].value;
+    }
+    
+    function isTwoPair(cards) {
+        return (cards[0].value === cards[1].value && cards[2].value === cards[3].value) ||
+               (cards[0].value === cards[1].value && cards[3].value === cards[4].value) ||
+               (cards[1].value === cards[2].value && cards[3].value === cards[4].value);
+    }
+    
+    function isOnePair(cards) {
+        return cards[0].value === cards[1].value ||
+               cards[1].value === cards[2].value ||
+               cards[2].value === cards[3].value ||
+               cards[3].value === cards[4].value;
+    }
 
 })()
 
