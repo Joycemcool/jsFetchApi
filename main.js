@@ -1,6 +1,7 @@
 //IFFI
 (function(){
     
+    //Part B:Make an API Call 
     function btnLoad(){
         var url = 'https://trackapi.nutritionix.com/v2/search/instant/?query=hamburger'
         fetch(url, {
@@ -58,10 +59,6 @@
             .then(function(data){
                 console.log(data.cards);
                 data.cards.forEach((card)=>{
-                    // var name_p = document.createElement('p');
-                    // name_p.innerHTML = index 
-                    // document.getElementById('body').appendChild(name_p); 
-
                     var img = document.createElement('img');
                     img.src = card.image;
                     document.getElementById('body').appendChild(img); 
@@ -73,7 +70,49 @@
             });
         })
 
-    //below credit to Chatgpt
+    //Async fetch function
+
+    const royal_flush = 'https://prog2700.onrender.com/pokerhandtest/royalflush';
+    const straight_flush = 'https://prog2700.onrender.com/pokerhandtest/straightflush';
+    const four_of_a_kind = 'https://prog2700.onrender.com/pokerhandtest/fourofakind';
+    const full_house = 'https://prog2700.onrender.com/pokerhandtest/fullhouse';
+    const flush = 'https://prog2700.onrender.com/pokerhandtest/flush';
+    const straight = 'https://prog2700.onrender.com/pokerhandtest/straight';
+    const three_of_a_kind = 'https://prog2700.onrender.com/pokerhandtest/threeofakind';
+    const two_pair = 'https://prog2700.onrender.com/pokerhandtest/twopair';
+    const one_pair = 'https://prog2700.onrender.com/pokerhandtest/onepair';
+    const high_card = 'https://prog2700.onrender.com/pokerhandtest/highcard';
+    const random = 'https://prog2700.onrender.com/pokerhandtest/random';
+
+    async function poker_hands_call(url){
+        const response = await fetch(url);
+        const re_cards = await response.json();
+        console.log(re_cards);
+        console.log(re_cards.cards);
+        return re_cards.cards;
+    }
+
+
+    function display(cards){
+        cards.forEach((card)=>{
+            var img = document.createElement('img');
+            img.src = card.image;
+            document.getElementById('display').appendChild(img); 
+        })
+
+        var high_card = determineHighestHand(cards);
+                var high_card_display = document.createElement('h4');
+                high_card_display.innerHTML = "Your Poker Hands is "+high_card;
+                document.getElementById('display').appendChild(high_card_display); 
+
+    }
+    
+  poker_hands_call(full_house)
+  .then(cards=>{
+    display(cards);
+  })
+
+
     function determinRank(value){
         const faceCards = { JACK: 11, QUEEN: 12, KING: 13, ACE: 14 };
         return faceCards[value] || parseInt(value);
